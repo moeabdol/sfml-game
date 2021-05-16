@@ -1,37 +1,22 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
+#include "Game.h"
 
 using namespace std;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "My First Game", sf::Style::Titlebar | sf::Style::Close);
-    sf::Event event;
+    // Initialize game engine
+    Game game;
 
     // Game loop
-    while(window.isOpen()) {
-        // Event polling
-        while(window.pollEvent(event)) {
-            switch(event.type) {
-                case sf::Event::Closed:
-                    window.close();
-                    break;
-                case sf::Event::KeyPressed:
-                    if (event.key.code == sf::Keyboard::Escape)
-                        window.close();
-                    break;
-            }
-        }
+    while(game.isRunning()) {
+        // Poll events
+        game.pollEvents();
 
         // Update game
+        game.update();
 
         // Render game
-        window.clear(sf::Color::Blue);     // Clears old frame
-
-        window.display();   // Display new drawing
+        game.render();
     }
 
     return 0;
