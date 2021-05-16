@@ -4,6 +4,9 @@
 using namespace std;
 
 int main() {
+    // Initialze srand
+    std::srand(static_cast<unsigned>(time(NULL)));
+
     // Initialize game engine
     Game game;
 
@@ -11,6 +14,9 @@ int main() {
     while(game.isRunning()) {
         // Poll events
         game.pollEvents();
+
+        // Update mouse positions
+        game.updateMousePositions();
 
         // Update game
         game.update();
