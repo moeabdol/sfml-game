@@ -14,7 +14,7 @@ void Game::initVariables() {
     this->window = nullptr;
 
     this->points = 0;
-    this->enemySpawnTimerMax = 1000.f;
+    this->enemySpawnTimerMax = 10.f;
     this->enemySpawnTimer = this->enemySpawnTimerMax;
     this->maxEnemies = 5;
 }
@@ -30,8 +30,8 @@ void Game::initEnemies() {
     this->enemy.setPosition(10.f, 10.f);
     this->enemy.setSize(sf::Vector2f(50.f, 50.f));
     this->enemy.setFillColor(sf::Color::Cyan);
-    this->enemy.setOutlineColor(sf::Color::Green);
-    this->enemy.setOutlineThickness(1.f);
+    //this->enemy.setOutlineColor(sf::Color::Green);
+    //this->enemy.setOutlineThickness(1.f);
 }
 
 bool Game::isRunning() {
@@ -55,6 +55,7 @@ void Game::pollEvents() {
 
 void Game::updateMousePositions() {
     this->mousePosWindow = sf::Mouse::getPosition(*this->window);
+    this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
 }
 
 void Game::spawnEnemy() {
@@ -67,7 +68,7 @@ void Game::spawnEnemy() {
 }
 
 void Game::updateEnemies() {
-    if (this->enemies.size() <= this->maxEnemies) {
+    if (this->enemies.size() < this->maxEnemies) {
         if (this->enemySpawnTimer > this->enemySpawnTimerMax) {
             this->spawnEnemy();
             this->enemySpawnTimer = 0.f;
@@ -75,8 +76,14 @@ void Game::updateEnemies() {
             this->enemySpawnTimer += 1.f;
     }
 
-    for (auto &e : this->enemies) {
-        e.move(0.f, 1.f);
+    for (int i = 0; i < this->enemies.size(); i++) {
+        this->enemies[i].move(0.f, 1.f);
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (this->enemies[i].getGlobalBounds().contains(this->mousePosView)) {
+                this->enemies.erase(this->enemies.begin() + i);
+            }
+        }
     }
 }
 
